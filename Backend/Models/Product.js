@@ -6,7 +6,7 @@ const productSchema =new mongoose.Schema(
             required:true,
             trim:true,
             minlength:2,
-            maxlength:100
+            maxlength:200
         },
         description:{
             type:String,
@@ -34,17 +34,24 @@ const productSchema =new mongoose.Schema(
     },
     rating:{
         type:Number,
-        required:true,
         default:0,
         min:0,
         max:5
     },
-    numReviews:{
-        type:Number,
-        required:true,
-        default:0,
-        min:0
-    },
+    reviews: [
+    {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        rating: {
+            type: Number,
+            min: 1,
+            max: 5
+        },
+        comment: String
+    }
+],
     image:{
         type:String,
         required:true,

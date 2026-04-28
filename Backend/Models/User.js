@@ -1,34 +1,35 @@
-const express = require("express")
 const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     name:{
         type: String,
         required: true,
         trim : true
-        upperCase:true
         
     },
      email: {
         type: String,
         required: true,
         unique: true,
-        lowerCase:true,
+        lowercase:true,
         trim:true
         
     },
     password: {
         type: String,
         required: true,
-        min: 8,
-        max: 16
+        minlength: 8,
+        maxlength: 16
     },
     address: {
-        street: String,
-        city: String,
-        state: String,
-        pincode: String,
-        country: String
+    street: { type: String, trim: true },
+    city: { type: String, trim: true },
+    state: { type: String, trim: true },
+    pincode: { 
+        type: String,
+        match: [/^\d{6}$/, "Invalid pincode"]
     },
+    country: { type: String, trim: true, default: "India" }
+},
     role: {
         type: String,
         enum: ["CUSTOMER", "ADMIN"],
@@ -36,54 +37,12 @@ const userSchema = new mongoose.Schema({
 
     }
     
-    name: {
-        type: String,
-        required: true,
-        max: 200,
-        min: 2,
-        trim: true
-    },
-    description: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    price: {
-        type: Number,
-        required: true,
-        min: 0
-    },
-    category: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    brand: {
-        type: String,
-        trim: true
-    },
-    stock: {
-        type: Number,
-        default: 0,
-        min: 0
-    },
-    images: [
-        {
-            type: String
-        }
-    ],
-    ratings: {
-        type: Number,
-        default: 0,
-        min: 0,
-        max: 5
-    },
-
+   
 }, {
-    timeStamps: true
+    timestamps: true
 });
 
-const User =  mongoose.model("user", userSchema)
+const User =  mongoose.model("User", userSchema)
 module.exports = User
 
     
