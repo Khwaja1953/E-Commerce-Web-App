@@ -1,27 +1,36 @@
-const express = require("express")
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        max: 200,
+        min: 2,
+        trim: true
     },
     description: {
-        type: String
+        type: String,
+        required: true,
+        trim: true
     },
     price: {
         type: Number,
-        required: true
+        required: true,
+        min: 0
     },
     category: {
-        type: String
+        type: String,
+        required: true,
+        trim: true
     },
     brand: {
-        type: String
+        type: String,
+        trim: true
     },
     stock: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     images: [
         {
@@ -30,10 +39,14 @@ const productSchema = new mongoose.Schema({
     ],
     ratings: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0,
+        max: 5
     },
-     createdAt: {
-        type: Date,
-        default: Date.now
-    }
+
+}, {
+    timeStamps: true
 });
+
+const Product = mongoose.model("Product", productSchema)
+module.exports = Product
