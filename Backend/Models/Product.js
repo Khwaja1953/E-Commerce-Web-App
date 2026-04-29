@@ -26,11 +26,9 @@ const productSchema =new mongoose.Schema(
         required:true,
         trim:true
     },
-    countInStock:{
-        type:Number,
+    inStock:{
+        type:Boolean,
         required:true,
-        min:0,
-        default:0
     },
     rating:{
         type:Number,
