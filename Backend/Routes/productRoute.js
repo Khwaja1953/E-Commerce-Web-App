@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
+const {addProduct} = require('../Controllers/productController');
+
 
 //add single product
-router.post("/add",async (req,res)=>{
-
-});
+router.post("/add",addProduct);
 
 //update single product
 router.put("/:id", async (req,res)=>{
