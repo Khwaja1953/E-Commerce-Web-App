@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const upload =require("./middleware/upload")
+const upload =require("../middleware/upload")
 
 const {addProduct, updatedProduct,deletedProduct,getProduct,getAllProducts} = require('../Controllers/productController');
-
-const {addProduct} = require('../Controllers/productController');
 
 //add single product
 router.post("/", upload.single("image"), addProduct);  

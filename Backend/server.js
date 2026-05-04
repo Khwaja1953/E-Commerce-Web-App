@@ -9,9 +9,11 @@ const MONGO_URL = "mongodb://localhost:27017/e-commerce-web-app";
 //routes
 const productRoute = require('./Routes/productRoute');
 
+
 //middleware
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
+app.use(express.urlencoded());
 
 app.get('/', (req, res) => {
   res.send('Hello World')
