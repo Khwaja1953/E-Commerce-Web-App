@@ -1,16 +1,17 @@
 const express= require('express');
-const connectDB = require('./db/connectDB')
+const path =require('path');
+const connectDB = require('./db/connectDB');
 
 const app = express();
 const PORT = 3000;
-const MONGO_URL = "mongodb://localhost:27017/e-commerce-web-app"
+const MONGO_URL = "mongodb://localhost:27017/e-commerce-web-app";
 
 //routes
 const productRoute = require('./Routes/productRoute');
 
 //middleware
-app.use(express.json())
-
+app.use(express.json());
+app.use("/uploads", express.static("uploads"));
 
 app.get('/', (req, res) => {
   res.send('Hello World')
