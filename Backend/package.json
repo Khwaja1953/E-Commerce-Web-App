@@ -13,8 +13,10 @@
   },
   "keywords": [],
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "express": "^5.2.1",
     "mongoose": "^9.5.0",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.7"
   }
 }
