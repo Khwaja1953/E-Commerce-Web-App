@@ -19,7 +19,7 @@ const addProduct = async (req, res) => {
         res.status(500).json({ error })
     }
 };
-//udate single produc
+//update single produc
 const updatedProduct = async (req, res) => {
     try {
         const { name, price, description, category } = req.body;
