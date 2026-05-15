@@ -4,7 +4,7 @@ const connectDB = require('./db/connectDb');
 
 const app = express();
 const PORT = 3000;
-const MONGO_URL = "mongodb+srv://ishfaqsheikh429_db_user:eHXkzlU4RyZbtjdM@cluster0.53ibvoy.mongodb.net/e-commerce-web-app";
+const MONGO_URL = "mongodb://localhost:27017/e-commerce-web-app";
 
 //routes
 const productRoute = require('./Routes/productRoute');

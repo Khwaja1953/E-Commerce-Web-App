@@ -8,7 +8,7 @@ require("dotenv").config();
 const registerUser = async (req, res) => {
     try {
 
-        const { name, email, password, phone } = req.body;
+        const { name, email, password, phoneNumber } = req.body;
         console.log(req.body)
 
 
@@ -35,70 +35,74 @@ const registerUser = async (req, res) => {
             text: `your otp for E-commerce web App is ${otp} please do not share with anyone`,
         });
         const newUser = await User.create({
-            name, email, password: hash, storedOtp: { otp: otp }
+            name, email, password: hash, storedOtp: { otp: otp },phoneNumber
         });
         console.log(newUser);
         return res.status(201).json({
             message: "User registered successfully"
         });
-        
+
     }
     catch (error) {
 
         return res.status(500).json({ error: error.message });
     }
 }
-    //put route
-    const updatedUser = async (req,res)=>{
-    
+//put route
+const updatedUser = async (req, res) => {
+
     try {
-        const{name,phoneNumber,address}=req.body;
-        const updatedUser =await User.findByIdAndUpdate(req.body.id,
+        const { name, phoneNumber, address } = req.body;
+        const updatedUser = await User.findByIdAndUpdate(req.body.id,
             {
                 name,
                 phoneNumber,
                 address
             },
-            {new:true},
+            { new: true },
 
         );
-        if(!updatedUser){
-            return res.status(404).json({message:"user not found"});
+        if (!updatedUser) {
+            return res.status(404).json({ message: "user not found" });
 
 
 
         }
-         res.status(201).json({message:"user updated successfully",updatedUser})
+        res.status(201).json({ message: "user updated successfully", updatedUser })
 
 
-        
-    } 
+
+    }
     catch (error) {
 
         return res.status(500).json({ error: error.message });
     }
-        
-    };
-    //Deleteduser
-    const deletedUser = async (req,res)=>{
-        try {
-            const id = req.body.id;
-            const user =await User.findByIdAndUpdate(id,
-                {isDeleted:true},
-                {new:true}
-            );
-            if (!user){
-                return res.status(404).json({message:"user not found"})
-            };
-            res.status(200).json({message:"user deleted sucessfullly",user})
+
+};
+//Deleteduser
+const deletedUser = async (req, res) => {
+    try {
+        const id = req.body.id;
+        console.log(id);
+        const user = await User.findByIdAndUpdate(
+            id,
+            { isDeleted: true },
+            { new: true }
+        );
+        console.log(user)
+        if (!user) {
+            return res.status(404).json({ message: "user not found" })
+        };
+        res.status(200).json({ message: "user deleted sucessfullly" })
 
 
 
-            
-        } catch (error) {  return res.status(500).json({ error: error.message });
-    
-            
-        }
-    
+
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+
+
+    }
+
 }
-module.exports = {registerUser,updatedUser,deletedUser}
+module.exports = { registerUser, updatedUser, deletedUser }
