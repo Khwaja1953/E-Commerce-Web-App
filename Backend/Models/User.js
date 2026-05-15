@@ -19,6 +19,21 @@ const userSchema = new mongoose.Schema({
         required: true,
         
     },
+    phoneNumber:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    storedOtp:{
+        otp:{
+            type:Number
+        },
+        validtill:{
+            type:Date,
+            default:()=>Date.now() + 5 * 60 * 1000
+        }
+
+    },
     address: {
     street: { type: String, trim: true },
     city: { type: String, trim: true },
@@ -34,6 +49,10 @@ const userSchema = new mongoose.Schema({
         enum: ["CUSTOMER", "ADMIN"],
         default: "CUSTOMER"
 
+    }, 
+    isDeleted:{
+        type:Boolean,
+        default:false
     }
     
    
