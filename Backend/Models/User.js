@@ -17,8 +17,25 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+        minlength:8,
+        maxlength:16,
         
     },
+    phoneNumber:{
+        type:String,
+        required:true,
+        unique:true,
+    },
+    storedOtp:{
+        otp:{
+            type:String
+        },
+        validtil:{
+            type:Date,
+            default:()=>Date.now() + 5 *60 * 1000
+        }
+    },
+
     address: {
     street: { type: String, trim: true },
     city: { type: String, trim: true },
@@ -34,7 +51,15 @@ const userSchema = new mongoose.Schema({
         enum: ["CUSTOMER", "ADMIN"],
         default: "CUSTOMER"
 
-    }
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
+    },
+    isVerified:{
+        type:Boolean,
+        default:false,
+    },
     
    
 }, {

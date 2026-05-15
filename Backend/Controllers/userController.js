@@ -48,4 +48,57 @@ const registerUser = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
-module.exports = registerUser
+    //put route
+    const updatedUser = async (req,res)=>{
+    
+    try {
+        const{name,phoneNumber,address}=req.body;
+        const updatedUser =await User.findByIdAndUpdate(req.body.id,
+            {
+                name,
+                phoneNumber,
+                address
+            },
+            {new:true},
+
+        );
+        if(!updatedUser){
+            return res.status(404).json({message:"user not found"});
+
+
+
+        }
+         res.status(201).json({message:"user updated successfully",updatedUser})
+
+
+        
+    } 
+    catch (error) {
+
+        return res.status(500).json({ error: error.message });
+    }
+        
+    };
+    //Deleteduser
+    const deletedUser = async (req,res)=>{
+        try {
+            const id = req.body.id;
+            const user =await User.findByIdAndUpdate(id,
+                {isDeleted:true},
+                {new:true}
+            );
+            if (!user){
+                return res.status(404).json({message:"user not found"})
+            };
+            res.status(200).json({message:"user deleted sucessfullly",user})
+
+
+
+            
+        } catch (error) {  return res.status(500).json({ error: error.message });
+    
+            
+        }
+    
+}
+module.exports = {registerUser,updatedUser,deletedUser}
