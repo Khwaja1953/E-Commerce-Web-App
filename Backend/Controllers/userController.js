@@ -3,6 +3,7 @@ const User = require('../Models/User');
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer')
 const transporter = require('../db/nodemailer');
+const {createToken} = require('../utils/token')
 
 
 
@@ -124,18 +125,33 @@ const login = async(req,res)=>{
             return res.status(400).json({error:"invalid email"});
         }
 
-        if(!bcrypt.compareSync(password, User.password)){//bcrypt compares:entered password vs hashed password
+        if(!bcrypt.compareSync(password, user.password)){//bcrypt compares:entered password vs hashed password
          //If wrong → error message.
         return res.status(400).json({error:"invalid password"});
- }
+        }
         
         if(!user.isVerified)
-        { return res.status(400).json({error:"please verify your account first"})}
+        { return res.status(400).json({error:"please verify your account first"});
+        }
+   
+        const token =await createToken(user)
+
+        
+      
+
+        return res.status(200).json({
+            message: "Login successful",
+            token
+        });
+    
     }
-     catch (error) {
+    catch (error) {
         return res.status(500).json({ error: error.message });
+
     }
-}
+ }
+   
+
 //Deleteduser
 const deletedUser = async (req, res) => {
     try {
@@ -162,4 +178,4 @@ const deletedUser = async (req, res) => {
     }
 
 }
-module.exports = { registerUser, updatedUser, deletedUser }
+module.exports = { registerUser, updatedUser, deletedUser, verifyOtp, login}
