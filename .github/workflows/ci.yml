@@ -1,7 +1,11 @@
-name: Backend CI
+name: Backend CI Pipeline
 
 on:
   push:
+    branches:
+      - "**"
+
+  pull_request:
     branches:
       - "**"
 
@@ -14,13 +18,16 @@ jobs:
         working-directory: Backend
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
+
+      - name: Check Node Version
+        run: node -v
 
       - name: Install Dependencies
         run: npm install
