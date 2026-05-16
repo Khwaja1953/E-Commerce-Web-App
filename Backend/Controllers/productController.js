@@ -56,7 +56,7 @@ const deletedProduct = async (req, res) => {
             { new: true }
         );
         if (!product)
-            return res.staus(404).json({ message: "product not found" })
+            return res.status(404).json({ message: "product not found" })
         return res.status(200).json({ message: " product deleted successfully" })
 
 
