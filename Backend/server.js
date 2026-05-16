@@ -14,7 +14,7 @@ const userRoute = require('./Routes/UserRoute')
 //middleware
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.send('Hello World')

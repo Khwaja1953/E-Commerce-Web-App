@@ -55,7 +55,7 @@ const updatedUser = async (req, res) => {
 
     try {
         const { name, phoneNumber, address } = req.body;
-        const updatedUser = await User.findByIdAndUpdate(req.body.id,
+        const user = await User.findByIdAndUpdate(req.body.id,
             {
                 name,
                 phoneNumber,
@@ -64,13 +64,13 @@ const updatedUser = async (req, res) => {
             { new: true },
 
         );
-        if (!updatedUser) {
+        if (!user) {
             return res.status(404).json({ message: "user not found" });
 
 
 
         }
-        res.status(201).json({ message: "user updated successfully", updatedUser })
+        res.status(201).json({ message: "user updated successfully", updatedUser: user })
 
 
 
