@@ -22,4 +22,18 @@ return null
 }
 
 }
-module.exports = {createToken}
+const verifyToken = async (token)=>{
+
+    try {
+        const data = jwt.verify(token,process.env.JWT_SECRET);
+        if (!data){
+            return null;
+        }
+        return data;
+        
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+module.exports = {createToken, verifyToken}

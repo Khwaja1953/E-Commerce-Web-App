@@ -1,10 +1,11 @@
 const express= require('express');
 const path =require('path');
 const connectDB = require('./db/connectDb');
+require("dotenv").config();
 
 const app = express();
-const PORT = 3000;
-const MONGO_URL = "mongodb://localhost:27017/e-commerce-web-app";
+const PORT = process.env.PORT || 3000;
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/e-commerce-web-app";
 
 //routes
 const productRoute = require('./Routes/productRoute');
