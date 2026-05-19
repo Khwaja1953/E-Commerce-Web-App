@@ -8,10 +8,10 @@ const protectedMiddleware= async (req,res,next)=>{
         return res.status(401).json({message:"access denied.login required"})
 
     }
-    try {const decoded = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET);
-        console.log(decoded);
+    try {const decoded = token.split(" ")[1];
+        // console.log(decoded);
         const data = await verifyToken(decoded);
-        console.log(data);
+        // console.log(data);
         req.user = data;
         next();
         

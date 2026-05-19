@@ -3,16 +3,20 @@ const router = express.Router();
 const upload =require("../middleware/upload")
 
 const {addProduct, updatedProduct,deletedProduct,getProduct,getAllProducts} = require('../Controllers/productController');
+const {protectedMiddleware} = require("../middleware/protected");
+const {restrictedMiddleware} = require("../middleware/restrictedMiddleware")
+
+router.use(protectedMiddleware);
 
 //add single product
-router.post("/", upload.single("image"), addProduct);  
+router.post("/",restrictedMiddleware("ADMIN"), upload.single("image"), addProduct);  
 
 
 //update single product
-router.put("/:id",  upload.single("image"),updatedProduct);
+router.put("/:id",restrictedMiddleware("ADMIN"),  upload.single("image"),updatedProduct);
 
 //delete single product
-router.delete("/:id", deletedProduct)
+router.delete("/:id",restrictedMiddleware("ADMIN"), deletedProduct)
 
 //get single product
 router.get("/:id",getProduct)

@@ -55,7 +55,7 @@ const updatedUser = async (req, res) => {
 
     try {
         const { name, phoneNumber, address } = req.body;
-        const user = await User.findByIdAndUpdate(req.body.id,
+        const user = await User.findByIdAndUpdate(req.user.id,
             {
                 name,
                 phoneNumber,
