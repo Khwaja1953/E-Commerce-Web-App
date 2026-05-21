@@ -12,4 +12,4 @@ router.post('/login', login);
 router.put("/updateuser",protectedMiddleware,updatedUser);
 router.delete("/deleteuser",deletedUser);
 
-module.exports = router;
+module.exports = router;    

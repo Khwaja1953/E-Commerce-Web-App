@@ -3,7 +3,7 @@ const restrictedMiddleware =(...roles)=>{
 
         try {
             if(!req.user){
-                return res.status(401).json({message:"user is not authicated"})
+                return res.status(401).json({message:"user is not authenticated"})
                 
             }
             
