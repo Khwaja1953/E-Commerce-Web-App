@@ -4,7 +4,7 @@ const Order = require("../models/orderModel");
 // CREATE ORDER
 const createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress ,shippinprice} = req.body;
+    const { orderItems, shippingAddress ,shippinPrice} = req.body;
 
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({
@@ -13,13 +13,13 @@ const createOrder = async (req, res) => {
     }
 
     // STEP 1: extract product IDs
-    const productIds = orderItems.map(
-      (item) => item.product
-    );
+    // const productIds = orderItems.map(
+    //   (item) => item.product
+    // );
 
     // STEP 2: get all products in ONE query
     const products = await Product.find({
-      _id: { $in: productIds },
+      _id: { $in: orderItems },
     });
 
     if (products.length !== productIds.length) {
@@ -46,8 +46,11 @@ const createOrder = async (req, res) => {
     // STEP 4: create order
     const order = new Order({
       user: req.user._id,
-      orderItems: updatedOrderItems,
+      orderItems: orderItems,
+      itemPrice: updatedOrderItems.price,
       shippingAddress,
+      shippingPrice,
+      totalPrice: itemPrice + shippingPrice
     });
 
     const createdOrder = await order.save();
