@@ -11,6 +11,7 @@ const protectedMiddleware= async (req,res,next)=>{
     try {const decoded = token.split(" ")[1];
         // console.log(decoded);
         const data = await verifyToken(decoded);
+
         // console.log(data);
         req.user = data;
         next();
