@@ -4,29 +4,50 @@ const Order = require("../models/orderModel");
 // CREATE ORDER
 const createOrder = async (req, res) => {
   try {
-    const {
-      orderItems,
-      shippingAddress,
-      paymentMethod,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
-    } = req.body;
+    const { orderItems, shippingAddress ,shippinprice} = req.body;
 
-    if (orderItems.length === 0) {
+    if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({
         message: "No order items",
       });
     }
 
+    // STEP 1: extract product IDs
+    const productIds = orderItems.map(
+      (item) => item.product
+    );
+
+    // STEP 2: get all products in ONE query
+    const products = await Product.find({
+      _id: { $in: productIds },
+    });
+
+    if (products.length !== productIds.length) {
+      return res.status(404).json({
+        message: "Some products not found",
+      });
+    }
+
+    // STEP 3: build order items
+    const updatedOrderItems = orderItems.map((item) => {
+      const product = products.find(
+        (p) => p._id.toString() === item.product
+      );
+
+      return {
+        product: product._id,
+        name: product.name,
+        image: product.image,
+        price: product.price,
+        quantity: item.quantity,
+      };
+    });
+
+    // STEP 4: create order
     const order = new Order({
       user: req.user._id,
-      orderItems,
+      orderItems: updatedOrderItems,
       shippingAddress,
-      paymentMethod,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
     });
 
     const createdOrder = await order.save();
@@ -39,7 +60,6 @@ const createOrder = async (req, res) => {
     });
   }
 };
-
 
 // GET LOGGED IN USER ORDERS
 const getMyOrders = async (req, res) => {
@@ -59,7 +79,7 @@ const getMyOrders = async (req, res) => {
 
 
 // GET SINGLE ORDER
-const getOrderById = async (req, res) => {
+const getOrderById = async (req, rens) => {
   try {
     const order = await Order.findById(
       req.params.id
