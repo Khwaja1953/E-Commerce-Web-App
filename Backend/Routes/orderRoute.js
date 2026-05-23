@@ -4,44 +4,41 @@ const {
   createOrder,
   getMyOrders,
   getOrderById,
-   cancelOrder
-} = require("../controllers/orderController");
+  cancelOrder
+} = require("../Controllers/orderController");
 
 const {
-  protect,
-} = require("../middleware/authMiddleware");
+  protectedMiddleware,
+} = require("../middleware/protected");
 
 const router = express.Router();
-
 
 // CREATE ORDER
 router.post(
   "/",
-  protect,
+  protectedMiddleware,
   createOrder
 );
-
 
 // GET LOGGED IN USER ORDERS
 router.get(
   "/my-orders",
-  protect,
+  protectedMiddleware,
   getMyOrders
 );
-
 
 // GET SINGLE ORDER
 router.get(
   "/:id",
-  protect,
+  protectedMiddleware,
   getOrderById
 );
+
 // CANCEL ORDER
 router.put(
   "/:id/cancel",
-  protect,
+  protectedMiddleware,
   cancelOrder
 );
-
 
 module.exports = router;

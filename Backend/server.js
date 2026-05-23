@@ -9,7 +9,9 @@ const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/e-commerce
 
 //routes
 const productRoute = require('./Routes/productRoute');
-const userRoute = require('./Routes/UserRoute')
+const userRoute = require('./Routes/UserRoute');
+const orderRoute = require('./Routes/orderRoute');
+const cartRoute = require('./Routes/cartRoute');
 
 
 //middleware
@@ -22,6 +24,8 @@ app.get('/', (req, res) => {
 });
 app.use("/product",productRoute);
 app.use("/user",userRoute);
+app.use("/order",orderRoute);
+app.use("/cart",cartRoute);
 
 
 connectDB(MONGO_URL)
