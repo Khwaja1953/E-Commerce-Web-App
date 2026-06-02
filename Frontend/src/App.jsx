@@ -1,6 +1,12 @@
 // src/App.jsx
 import {react}from"react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+  import { Routes, Route } from "react-router-dom";
+  import React from 'react'
+  import Home from "./Pages/Home";
+import Navbar from './Components/Navbar'
+import Footer from './Components/Footer'
+import Product from './Pages/Product'
 
 import Home from "./Pages/Home";
 import Product from "./Pages/Product";
@@ -11,31 +17,15 @@ import Order from "./Pages/Order";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <div>
+      <Navbar/>
+       <Routes>
         <Route path="/" element={<Home />} />
-
-        <Route
-          path="/product/:id"
-          element={<Product />}
-        />
-
-        {/* <Route path="/cart" element={<Cart />} /> */}
-
-        <Route path="/login" element={<Login />} />
-
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-
-        <Route
-          path="/order"
-          element={<Order/>}
-        />
-      </Routes>
-    </BrowserRouter>
-  );
+       <Route path="/products" element={<Product />} />
+       </Routes>
+       <Footer/>
+    </div>
+  )
 }
 
 export default App;

@@ -1,101 +1,59 @@
-// src/pages/Product.jsx
 
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useEffect,useState } from "react";
+import { Get } from "../services/api";
 
-const Product = () => {
-  const { id } = useParams();
+function Product(){
+  const [products, setProducts]= useState([]);
 
-  const [product, setProduct] = useState(null);
-
-  useEffect(() => {
-    fetchProduct();
-  }, []);
-
-  const fetchProduct = async () => {
+  const fetchProducts = async()=>{
     try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/products/${id}`
-      );
-
-      setProduct(data);
+        const data = await Get("/product/get-all-products");
+        console.log(res.data);
+        setProducts(data);
     } catch (error) {
-      console.log(error);
+        console.log(error);
+        
     }
   };
+  useEffect(()=>{
+    fetchProducts();
+  },[]);
 
-  const addToCart = () => {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return(
+    <div className="p-10">
+        <h1 className="text-3xl font-bold mb-6">
+            All products
+        </h1>
 
-    const existingItem = cart.find(
-      (item) => item._id === product._id
-    );
-
-    if (existingItem) {
-      existingItem.qty += 1;
-    } else {
-      cart.push({ ...product, qty: 1 });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-
-    alert("Product added to cart");
-  };
-
-  if (!product) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-100 py-10">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="grid md:grid-cols-2 gap-8 p-8">
-
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+             {products.map((product) => (
+                <div
+            key={product._id}
+            className="border rounded-lg p-4 shadow"
+          >
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-[450px] object-cover rounded-lg"
+              className="h-40 w-full object-cover rounded"
             />
-          </div>
-
-          <div className="flex flex-col justify-center">
-            <h1 className="text-4xl font-bold mb-4">
+             <h2 className="text-xl font-semibold mt-2">
               {product.name}
-            </h1>
-
-            <p className="text-gray-600 mb-4">
-              {product.description}
-            </p>
-
-            <h2 className="text-3xl font-bold text-blue-600 mb-4">
-              ₹{product.price}
             </h2>
 
-            <p className="mb-4">
-              Stock:
-              <span className="font-semibold ml-2">
-                {product.countInStock}
-              </span>
+            <p className="text-gray-600">
+              {product.description}
             </p>
-
-            <button
-              onClick={addToCart}
-              className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition"
-            >
-              Add To Cart
+            <p className="font-bold mt-2">
+              ₹ {product.price}
+            </p>
+             <button className="bg-black text-white px-4 py-2 mt-3 w-full rounded">
+              Add to Cart
             </button>
           </div>
-
+        ))}
+        
         </div>
-      </div>
     </div>
   );
-};
-
+}
 export default Product;
