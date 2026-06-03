@@ -35,7 +35,7 @@ const Navbar = () => {
         <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""}to="/cart">Cart</NavLink></li>
         <li><button onClick={logoutHandler}className="bg-red-500 px-2 py-1 rounded text-white">Logout</button></li></>
         ) : (<>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""}to="/addBlog">Register</NavLink></li>
+        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""}to="/register">Register</NavLink></li>
         <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""} to="/login">Login</NavLink></li>
         <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""} to="/cart">cart</NavLink></li>
        </>)}
