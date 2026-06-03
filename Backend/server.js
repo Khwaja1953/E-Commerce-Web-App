@@ -2,6 +2,7 @@ const express= require('express');
 const path =require('path');
 const connectDB = require('./db/connectDb');
 require("dotenv").config();
+const cors = require("cors")
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ const cartRoute = require('./Routes/cartRoute');
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('Hello World')
