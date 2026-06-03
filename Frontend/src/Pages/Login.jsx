@@ -27,7 +27,7 @@ const Login = () => {
         "http://localhost:3000/api/users/login",
         formData
       );
-
+       localStorage.setItem("token", data.token);
       localStorage.setItem("userInfo", JSON.stringify(data));
 
       navigate("/");
