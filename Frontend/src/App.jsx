@@ -18,6 +18,8 @@ function App() {
        <Routes>
         <Route path="/" element={<Home />} />
        <Route path="/products" element={<Product />} />
+       <Route path="/product/:id" element={<Product />} />
+
        </Routes>
        <Footer/>
     </div>
