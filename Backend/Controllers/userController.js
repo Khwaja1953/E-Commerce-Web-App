@@ -117,7 +117,7 @@ const verifyOtp = async (req, res) => {
     }
 }
     
-const login = async(req,res)=>{
+const loginUser = async(req,res)=>{
     try{
         const {email, password } = req.body;
         const user = await User.findOne({email});
@@ -178,4 +178,4 @@ const deletedUser = async (req, res) => {
     }
 
 }
-module.exports = { registerUser, updatedUser, deletedUser, verifyOtp, login}
+module.exports = { registerUser, updatedUser, deletedUser, verifyOtp, loginUser}

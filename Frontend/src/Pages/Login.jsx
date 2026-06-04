@@ -1,7 +1,7 @@
 // src/pages/Login.jsx
 
 import { useState } from "react";
-import axios from "axios";
+import API from "../services/Axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -23,15 +23,16 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:3000/api/users/login",
+      const {data}  = await API.post(
+        "/user/login",
         formData
       );
        localStorage.setItem("token", data.token);
       localStorage.setItem("userInfo", JSON.stringify(data));
 
       navigate("/");
-    } catch (error) {
+    } 
+    catch (error) {
       console.log(error);
       alert("Invalid Credentials");
     }
