@@ -6,6 +6,7 @@ import Footer from './Components/Footer'
 import Product from './Pages/Product'
 
 import Home from "./Pages/Home";
+import AdminHome from "./Pages/Admin/Home";
 // import Cart from "./pages/Cart";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
@@ -22,6 +23,8 @@ function App() {
 
        <Route path="/login" element={<Login/>}/>
        <Route path="/register" element={<Register/>}/>
+
+       <Route path="/admin" element={<AdminHome/>}/>
        </Routes>
        <Footer/>
     </div>
