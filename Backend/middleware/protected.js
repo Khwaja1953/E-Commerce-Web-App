@@ -12,7 +12,10 @@ const protectedMiddleware= async (req,res,next)=>{
         // console.log(decoded);
         const data = await verifyToken(decoded);
 
-        // console.log(data);
+        if (!data) {
+          return res.status(401).json({ error: "invalid token" });
+        }
+
         req.user = data;
         next();
         

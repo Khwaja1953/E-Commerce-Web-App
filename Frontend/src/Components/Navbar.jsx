@@ -1,48 +1,142 @@
-import React from 'react'
-import { Link, NavLink, useNavigate} from 'react-router-dom'
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-   useEffect(() => {
+
+  useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  
-  }, []);
-   const logoutHandler = () => {
+    setIsLogin(!!token);
+  });
+
+  const logoutHandler = () => {
     localStorage.removeItem("token");
-     localStorage.removeItem("userInfo");
+    localStorage.removeItem("userInfo");
     setIsLogin(false);
+    setIsOpen(false);
     navigate("/login");
   };
 
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Products", path: "/products" },
+  ];
 
+  const authLinks = isLogin
+    ? [
+        { name: "Cart", path: "/cart" },
+        { name: "Orders", path: "/order" },
+        { name: "Profile", path: "/profile" },
+      ]
+    : [
+        { name: "Register", path: "/register" },
+        { name: "Login", path: "/login" },
+      ];
 
-  console.log("i am navbar")
   return (
-    <div className='flex bg-gray-400 h-[10vh] justify-between items-center px-40 sticky top-0 w-full'>
-      <p>My Shoppie</p>
-      <ul className='flex w-[50vw] justify-evenly'>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""} to='/'>Home</NavLink></li>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""} to='/products'>products</NavLink></li>
-        {isLogin ? (
-          <>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""}to="/cart">Cart</NavLink></li>
-        <li><button onClick={logoutHandler}className="bg-red-500 px-2 py-1 rounded text-white">Logout</button></li></>
-        ) : (<>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""}to="/register">Register</NavLink></li>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""} to="/login">Login</NavLink></li>
-        <li><NavLink className={(e)=> e.isActive?"bg-gray-600 px-2 py-1 border rounded text-white":""} to="/cart">cart</NavLink></li>
-       </>)}
-      </ul>
-    </div>
+    <nav className="bg-gray-900 text-white sticky top-0 z-50 shadow-xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <Link to="/" className="text-2xl font-black tracking-tighter text-blue-500">
+            MY SHOPPIE
+          </Link>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-center space-x-6">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `text-sm font-medium transition-colors ${
+                      isActive ? "text-blue-400" : "hover:text-blue-400"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+              <div className="h-6 w-px bg-gray-700 mx-2" />
+              {authLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `text-sm font-medium transition-colors ${
+                      isActive ? "text-blue-400" : "hover:text-blue-400"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+              {isLogin && (
+                <button
+                  onClick={logoutHandler}
+                  className="bg-red-600 hover:bg-red-700 px-4 py-1.5 rounded-md text-sm font-bold transition-all transform active:scale-95"
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none"
+            >
+              <svg
+                className="h-6 w-6"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                {isOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-gray-800 border-t border-gray-700`}>
+        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+          {[...navLinks, ...authLinks].map((link) => (
+            <NavLink
+              key={link.name}
+              to={link.path}
+              onClick={() => setIsOpen(false)}
+              className={({ isActive }) =>
+                `block px-3 py-2 rounded-md text-base font-medium ${
+                  isActive ? "bg-gray-900 text-blue-400" : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                }`
+              }
+            >
+              {link.name}
+            </NavLink>
+          ))}
+          {isLogin && (
+            <button
+              onClick={logoutHandler}
+              className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-400 hover:bg-gray-700 hover:text-red-300"
+            >
+              Logout
+            </button>
+          )}
+        </div>
+      </div>
+    </nav>
   );
-}
+};
 
 
 export default Navbar
