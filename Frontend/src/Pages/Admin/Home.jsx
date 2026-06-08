@@ -39,7 +39,7 @@
        const res = await axios.get(
          "http://localhost:3000/product"
        );
-       setProducts(res.data);
+       setProducts(res.data.product);
     } catch (error) {
         console.log(error);
     }
@@ -71,8 +71,10 @@
            <hr />
             
             {
-           product.map((product)=>(
-            <div key={product._id}>
+            products.length != 0 &&(
+
+                products.map((product)=>(
+                    <div key={product._id}>
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
                 <p>{product.price}</p>
@@ -81,6 +83,7 @@
                  <button onClick={()=>deleteProduct(product._id)}>Delete</button>
             </div>
            ))
+        )
            
         }
 
