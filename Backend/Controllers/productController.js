@@ -35,7 +35,7 @@ const updatedProduct = async (req, res) => {
         console.log(product)
         if (!product) { return res.status(404).json({ error: "product not updated" }) };
 
-        return res.status(200).json({ message: "product updte successfully" })
+        return res.status(200).json({ message: "product update successfully" })
 
 
 
