@@ -7,10 +7,12 @@ import Product from './Pages/Product'
 
 import Home from "./Pages/Home";
 import AdminHome from "./Pages/Admin/Home";
-// import Cart from "./pages/Cart";
+import Cart from "./Pages/Cart";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Order from "./Pages/Order";
+import VerifyOtp from "./Pages/VerifyOtp";
+import Profile from "./Pages/Profile";
 
 function App() {
   return (
@@ -20,6 +22,10 @@ function App() {
         <Route path="/" element={<Home />} />
        <Route path="/products" element={<Product />} />
        <Route path="/product/:id" element={<Product />} />
+       <Route path="/cart" element={<Cart />} />
+       <Route path="/verify-otp" element={<VerifyOtp />} />
+       <Route path="/profile" element={<Profile />} />
+       <Route path="/order" element={<Order />} />
 
        <Route path="/login" element={<Login/>}/>
        <Route path="/register" element={<Register/>}/>

@@ -1,5 +1,5 @@
 const Cart = require('../Models/cart')
-const Product = require("../Models/product");
+const Product = require("../Models/Product");
 
 const addToCart = async(req,res)=>{
     try{
@@ -148,4 +148,22 @@ const removeFromCart = async (req, res) => {
 
 
 
-module.exports = {addToCart, removeFromCart, updateCart}
+const getCart = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const cart = await Cart.findOne({ user: userId }).populate("products.product");
+
+    if (!cart) {
+      return res.status(200).json({
+        message: "Cart is empty",
+        products: [],
+      });
+    }
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = {addToCart, removeFromCart, updateCart, getCart}
