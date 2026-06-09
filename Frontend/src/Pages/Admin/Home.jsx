@@ -4,15 +4,44 @@ import axios from "axios";
 function AdminHome() {
   const [products, setProducts] = useState([]);
   const [editProduct, setEditProduct] = useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    price: ""
+  });
 
   // Fetch all products
   const getProducts = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:3000/api/products"
+        "http://localhost:3000/product"
       );
+    //   console.log(res.data)
+      setProducts(res.data.product);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      setProducts(res.data.products);
+  // Add product
+  const addProduct = async (e) => {
+    e.preventDefault();
+    try {
+        const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:3000/product",{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+        form
+      );
+      setForm({
+        name: "",
+        description: "",
+        price: ""
+      });
+      getProducts();
     } catch (error) {
       console.log(error);
     }
@@ -26,7 +55,7 @@ function AdminHome() {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:3000/api/products/${id}`
+        `http://localhost:3000/product/${id}`
       );
 
       alert(res.data.message);
@@ -43,7 +72,7 @@ function AdminHome() {
   const handleUpdate = async () => {
     try {
       const res = await axios.put(
-        `http://localhost:3000/api/products/${editProduct._id}`,
+        `http://localhost:3000/product/${editProduct._id}`,
         {
           name: editProduct.name,
           price: editProduct.price,
@@ -72,9 +101,58 @@ function AdminHome() {
         Admin Product Management
       </h1>
 
+      {/* Add Product Form */}
+      <form onSubmit={addProduct} className="mb-8 border rounded-lg p-6 shadow">
+        <h2 className="text-xl font-bold mb-4">Add New Product</h2>
+        <input
+          type="text"
+          placeholder="Product Name"
+          value={form.name}
+          onChange={(e) => setForm({
+            ...form,
+            name: e.target.value
+          })}
+          className="w-full border p-2 rounded mb-3"
+          required
+        />
+
+        <input
+          type="text"
+          placeholder="Description"
+          value={form.description}
+          onChange={(e) => setForm({
+            ...form,
+            description: e.target.value
+          })}
+          className="w-full border p-2 rounded mb-3"
+          required
+        />
+
+        <input
+          type="number"
+          placeholder="Price"
+          value={form.price}
+          onChange={(e) => setForm({
+            ...form,
+            price: e.target.value
+          })}
+          className="w-full border p-2 rounded mb-3"
+          required
+        />
+
+        <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+          Add Product
+        </button>
+      </form>
+
       {/* Product List */}
       <div className="grid gap-4">
-        {products.map((product) => (
+
+        {
+        products.length > 0 &&(
+
+      
+        products.map((product) => (
           <div
             key={product._id}
             className="border rounded-lg p-4 flex justify-between items-center"
@@ -104,7 +182,7 @@ function AdminHome() {
               </button>
             </div>
           </div>
-        ))}
+        ))  )}
       </div>
 
       {/* Edit Form */}
@@ -149,7 +227,7 @@ function AdminHome() {
             <button
               onClick={() => setEditProduct(null)}
               className="bg-gray-500 text-white px-4 py-2 rounded"
-            >
+            >   
               Cancel
             </button>
           </div>
@@ -160,100 +238,3 @@ function AdminHome() {
 }
 
 export default AdminHome;
-   
-   import { useEffect,useState } from "react";
-   import axios from "axios";
-
-   const Home = ()=>{
-    const [products,setProducts] = useState([]);
-    const [form,setForm] = useState({
-        name:"",
-        description:"",
-        price:""
-    });
-
-    useEffect(()=>{
-        getProducts();
-    },[]);  
-   
-
-   //for create product//
-
-   const addProduct = async(e)=>{
-    e.preventDefault();
-    await axios.post(
-        "http://localhost:3000/product",
-        form
-    );
-    setForm({
-        name:"",
-        description:"",
-        price:""
-    })
-    getProducts();
-
-   }
-
-   //for read product//
-
-   const getProducts = async()=>{
-    try {
-       const res = await axios.get(
-         "http://localhost:3000/product"
-       );
-       setProducts(res.data.product);
-    } catch (error) {
-        console.log(error);
-    }
-   }
-
-   return(
-    <div>
-        <h1>Admin Dashboard</h1>
-        <form onSubmit={addProduct}>
-            <input placeholder="name" value={form.name} onChange={(e)=>setForm({
-                ...form,
-                name:e.target.value
-            })}
-            />
-
-            <input placeholder="description" value = {form.description} onChange={(e)=>setForm({
-                ...form,
-                description:e.target.value
-            })}
-            />
-
-             <input placeholder="price" value={form.value} onChange={(e)=>setForm({
-                ...form,
-                price:e.target.value
-             })}
-            />
-           <button>Add product</button>
-        </form>
-           <hr />
-            
-            {
-            products.length != 0 &&(
-
-                products.map((product)=>(
-                    <div key={product._id}>
-                <h3>{product.name}</h3>
-                <p>{product.description}</p>
-                <p>{product.price}</p>
-
-                <button onClick={()=>updateProduct(product._id)}>Edit</button>
-                 <button onClick={()=>deleteProduct(product._id)}>Delete</button>
-            </div>
-           ))
-        )
-           
-        }
-
-
-    </div>
-   )
-}
-
-
-
-   export default Home;
