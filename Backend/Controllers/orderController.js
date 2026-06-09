@@ -1,5 +1,6 @@
 const Order = require("../Models/order");
 const Product = require("../Models/Product");
+const Cart = require("../Models/cart");
 
 // CREATE ORDER
 const createOrder = async (req, res) => {
@@ -12,13 +13,8 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // STEP 1: get all unique product IDs and their counts (quantities)
-    const quantityMap = orderItems.reduce((acc, id) => {
-      acc[id] = (acc[id] || 0) + 1;
-      return acc;
-    }, {});
-
-    const uniqueProductIds = Object.keys(quantityMap);
+    const productIds = orderItems.map(item => item.product);
+    const uniqueProductIds = [...new Set(productIds)];
     const products = await Product.find({
       _id: { $in: uniqueProductIds },
     });
@@ -31,9 +27,9 @@ const createOrder = async (req, res) => {
 
     // STEP 2: build updatedOrderItems and calculate itemsPrice
     let itemsPrice = 0;
-    const formattedOrderItems = products.map((product) => {
-      const quantity = quantityMap[product._id.toString()];
-      const itemTotalPrice = product.price * quantity;
+    const formattedOrderItems = orderItems.map((item) => {
+      const product = products.find(p => p._id.toString() === item.product);
+      const itemTotalPrice = product.price * item.quantity;
       itemsPrice += itemTotalPrice;
 
       return {
@@ -41,13 +37,13 @@ const createOrder = async (req, res) => {
         name: product.name,
         image: product.image,
         price: product.price,
-        quantity: quantity,
+        quantity: item.quantity,
       };
     });
 
     // STEP 3: create order
     const order = new Order({
-      user: req.user._id,
+      user: req.user.id,
       orderItems: formattedOrderItems,
       shippingAddress,
       itemsPrice: itemsPrice,
@@ -56,6 +52,9 @@ const createOrder = async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // STEP 4: Clear user cart
+    await Cart.findOneAndDelete({ user: req.user.id });
 
     res.status(201).json(createdOrder);
   } catch (error) {
@@ -69,7 +68,7 @@ const createOrder = async (req, res) => {
 const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({
-      user: req.user._id,
+      user: req.user.id,
     }).sort({ createdAt: -1 });
 
     res.json(orders);
@@ -115,7 +114,7 @@ const cancelOrder = async (req, res) => {
     }
 
     // CHECK ORDER OWNER
-    if (order.user.toString() !== req.user._id.toString()) {
+    if (order.user.toString() !== req.user.id.toString()) {
       return res.status(401).json({
         message: "Unauthorized",
       });

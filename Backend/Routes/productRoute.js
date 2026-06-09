@@ -6,22 +6,16 @@ const {addProduct, updatedProduct,deletedProduct,getProduct,getAllProducts} = re
 const {protectedMiddleware} = require("../middleware/protected");
 const {restrictedMiddleware} = require("../middleware/restrictedMiddleware")
 
-router.use(protectedMiddleware);
-
-//add single product
-router.post("/",restrictedMiddleware("ADMIN"), upload.single("image"), addProduct);  
-
-
-//update single product
-router.put("/:id",restrictedMiddleware("ADMIN"),  upload.single("image"),updatedProduct);
-
-//delete single product
-router.delete("/:id",restrictedMiddleware("ADMIN"), deletedProduct)
-
-//get single product
+// Public routes
+router.get("/",getAllProducts)
 router.get("/:id",getProduct)
 
-//get all products
-router.get("/",getAllProducts)
+// Protected routes (require login)
+router.use(protectedMiddleware);
+
+// Admin only routes
+router.post("/",restrictedMiddleware("ADMIN"), upload.single("image"), addProduct);  
+router.put("/:id",restrictedMiddleware("ADMIN"),  upload.single("image"),updatedProduct);
+router.delete("/:id",restrictedMiddleware("ADMIN"), deletedProduct)
 
 module.exports = router;

@@ -35,7 +35,7 @@ const updatedProduct = async (req, res) => {
         console.log(product)
         if (!product) { return res.status(404).json({ error: "product not updated" }) };
 
-        return res.status(200).json({ message: "product updte successfully" })
+        return res.status(200).json({ message: "product update successfully" })
 
 
 
@@ -83,15 +83,24 @@ const getProduct = async (req, res) => {
 };
 const getAllProducts = async (req, res) => {
     try {
-        const product = await Product.find({isDeleted:false});
-        if (!product || product.length === 0){
+        const { category, search } = req.query;
+        let query = { isDeleted: false };
 
+        if (category) {
+            query.category = category;
+        }
+
+        if (search) {
+            query.name = { $regex: search, $options: "i" };
+        }
+
+        const products = await Product.find(query);
+        if (!products || products.length === 0){
             return res.status(404).json({ message: "product not found" })
         }
-        return res.status(200).json({ message: "product fetched successfully",product })
+        return res.status(200).json({ message: "product fetched successfully", product: products })
     } catch (error) {
         return res.status(500).json({ error: error.message })
-
     }
 }
 
