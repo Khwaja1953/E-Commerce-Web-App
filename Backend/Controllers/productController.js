@@ -2,6 +2,9 @@ const Product = require('../Models/Product');
 
 const addProduct = async (req, res) => {
     try {
+
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
         const { name, description, price, category } = req.body;
         const image = req.file ? req.file.path : null;
 
@@ -104,4 +107,25 @@ const getAllProducts = async (req, res) => {
     }
 }
 
-module.exports = { addProduct, updatedProduct, deletedProduct, getProduct, getAllProducts }
+const toggleStock = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.inStock = !product.inStock;
+    await product.save();
+
+    res.status(200).json({
+      message: "Stock updated",
+      inStock: product.inStock
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};  
+
+module.exports = { addProduct, updatedProduct, deletedProduct, getProduct, getAllProducts, toggleStock }
