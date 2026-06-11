@@ -85,9 +85,14 @@ function Product() {
           />
         </div>
         <div className="flex-1 py-4">
-          <span className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider">
-            {product.category}
-          </span>
+          <div className="flex gap-3 items-center">
+            <span className="bg-blue-100 text-blue-600 px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider">
+              {product.category}
+            </span>
+            <span className={`px-4 py-1 rounded-full text-sm font-bold uppercase tracking-wider ${product.inStock ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+              {product.inStock ? 'In Stock' : 'Out of Stock'}
+            </span>
+          </div>
           <h1 className="text-3xl md:text-5xl font-black text-gray-900 mt-4 leading-tight">
             {product.name}
           </h1>
@@ -104,9 +109,10 @@ function Product() {
             <div className="pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4">
               <button
                 onClick={() => addToCart(product._id)}
-                className="flex-1 bg-gray-900 text-white px-8 py-4 rounded-2xl text-xl font-bold hover:bg-gray-800 transition-all transform active:scale-95 shadow-xl"
+                disabled={!product.inStock}
+                className={`flex-1 px-8 py-4 rounded-2xl text-xl font-bold transition-all transform active:scale-95 shadow-xl ${product.inStock ? 'bg-gray-900 text-white hover:bg-gray-800 cursor-pointer' : 'bg-gray-400 text-gray-600 cursor-not-allowed'}`}
               >
-                Add to Cart
+                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
               </button>
               <button className="p-4 border-2 border-gray-100 rounded-2xl hover:bg-gray-50 transition">
                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -165,12 +171,15 @@ function Product() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
           {products.map((product) => (
             <div key={product._id} className="bg-white rounded-3xl p-4 shadow-sm hover:shadow-2xl transition-all duration-500 group">
-              <Link to={`/product/${product._id}`} className="block overflow-hidden rounded-2xl">
+              <Link to={`/product/${product._id}`} className="block overflow-hidden rounded-2xl relative">
                 <img
                   src={`http://localhost:3000/${product.image}`}
                   alt={product.name}
                   className="h-64 w-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
+                <span className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${product.inStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                  {product.inStock ? 'In Stock' : 'Out'}
+                </span>
               </Link>
               <div className="mt-6 px-2">
                 <span className="text-blue-600 text-xs font-black uppercase tracking-widest">{product.category}</span>
@@ -186,7 +195,8 @@ function Product() {
                   </p>
                   <button
                     onClick={() => addToCart(product._id)}
-                    className="bg-gray-900 text-white p-3 rounded-xl hover:bg-blue-600 transition-colors transform active:scale-90"
+                    disabled={!product.inStock}
+                    className={`p-3 rounded-xl transition-colors transform active:scale-90 ${product.inStock ? 'bg-gray-900 text-white hover:bg-blue-600 cursor-pointer' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />

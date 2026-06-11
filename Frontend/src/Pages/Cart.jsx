@@ -144,7 +144,12 @@ const Cart = () => {
               
               <div className="flex-1 text-center sm:text-left">
                 <h3 className="text-xl font-bold text-gray-900">{item.product.name}</h3>
-                <p className="text-blue-600 font-bold text-lg mt-1">₹{item.product.price}</p>
+                <div className="flex gap-2 items-center justify-center sm:justify-start mt-1">
+                  <p className="text-blue-600 font-bold text-lg">₹{item.product.price}</p>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${item.product.inStock ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                    {item.product.inStock ? 'In Stock' : 'Out of Stock'}
+                  </span>
+                </div>
                 
                 <div className="flex items-center justify-center sm:justify-start gap-4 mt-4">
                   <div className="flex items-center bg-gray-50 border border-gray-100 rounded-xl overflow-hidden">

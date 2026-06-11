@@ -244,7 +244,12 @@ function AdminHome() {
               </p>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap items-center">
+              <div className="w-full sm:w-auto">
+                <span className={`px-4 py-2 rounded font-semibold text-white ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}>
+                  {product.inStock ? 'In Stock' : 'Out of Stock'}
+                </span>
+              </div>
               <button
                 onClick={() => setEditProduct(product)}
                 className="bg-blue-500 text-white px-4 py-2 rounded"
