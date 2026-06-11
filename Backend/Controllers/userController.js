@@ -133,7 +133,7 @@ const loginUser = async(req,res)=>{
         if(!user.isVerified)
         { return res.status(400).json({error:"please verify your account first"});
         }
-   
+         console.log("CREATED TOKEN SECRET:", process.env.JWT_SECRET);
         const token =await createToken(user)
 
         

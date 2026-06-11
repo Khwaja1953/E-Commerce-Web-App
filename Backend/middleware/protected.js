@@ -1,6 +1,9 @@
+
 const jwt =require('jsonwebtoken');
 const {verifyToken} = require("../utils/token")
 
+
+console.log("VERIFY SECRET:", process.env.JWT_SECRET);
 const protectedMiddleware= async (req,res,next)=>{
     const token =req.headers.authorization
     
@@ -9,8 +12,10 @@ const protectedMiddleware= async (req,res,next)=>{
 
     }
     try {const decoded = token.split(" ")[1];
-        // console.log(decoded);
+        console.log("TOKEN RECEIVED BY BACKEND:", decoded);
+        
         const data = await verifyToken(decoded);
+        console.log("DECODED DATA:", data);  
 
         if (!data) {
           return res.status(401).json({ error: "invalid token" });
