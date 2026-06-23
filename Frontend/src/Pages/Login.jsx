@@ -4,6 +4,16 @@ import { useState } from "react";
 import API from "../services/Axios";
 import { useNavigate, Link } from "react-router-dom";
 
+const getRoleFromToken = (token) => {
+  try {
+    const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    const decodedPayload = JSON.parse(atob(payload));
+    return decodedPayload.role;
+  } catch (error) {
+    return null;
+  }
+};
+
 const Login = () => {
   const navigate = useNavigate();
 
@@ -23,14 +33,16 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const {data}  = await API.post(
+      const { data } = await API.post(
         "/user/login",
         formData
       );
-       localStorage.setItem("token", data.token);
+      const role = getRoleFromToken(data.token);
+
+      localStorage.setItem("token", data.token);
       localStorage.setItem("userInfo", JSON.stringify(data));
 
-      navigate("/");
+      navigate(role === "ADMIN" ? "/admin" : "/");
     } 
     catch (error) {
       console.log(error);

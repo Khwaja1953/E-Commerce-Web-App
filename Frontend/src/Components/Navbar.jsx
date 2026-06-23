@@ -1,20 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+
+const getRoleFromToken = (token) => {
+  try {
+    const payload = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    const decodedPayload = JSON.parse(atob(payload));
+    return decodedPayload.role;
+  } catch (error) {
+    return null;
+  }
+};
 
 const Navbar = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLogin(!!token);
-  });
+    setUserRole(token ? getRoleFromToken(token) : null);
+  }, [location.pathname]);
 
   const logoutHandler = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userInfo");
     setIsLogin(false);
+    setUserRole(null);
     setIsOpen(false);
     navigate("/login");
   };
@@ -26,6 +40,7 @@ const Navbar = () => {
 
   const authLinks = isLogin
     ? [
+        ...(userRole === "ADMIN" ? [{ name: "Admin", path: "/admin" }] : []),
         { name: "Cart", path: "/cart" },
         { name: "Orders", path: "/order" },
         { name: "Profile", path: "/profile" },

@@ -154,9 +154,72 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+// GET ALL ORDERS FOR ADMIN
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({})
+      .populate("user", "name email phoneNumber")
+      .sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// UPDATE ORDER STATUS FOR ADMIN
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status, reason } = req.body;
+    const allowedStatuses = ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid order status",
+      });
+    }
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    order.orderStatus = status;
+    order.isDelivered = status === "Delivered";
+    order.deliveredAt = status === "Delivered" ? new Date() : undefined;
+
+    if (status === "Cancelled") {
+      order.cancelReason = reason || "Cancelled by admin";
+      order.cancelledAt = new Date();
+    } else {
+      order.cancelReason = undefined;
+      order.cancelledAt = undefined;
+    }
+
+    const updatedOrder = await order.save();
+    await updatedOrder.populate("user", "name email phoneNumber");
+
+    res.json({
+      message: "Order status updated successfully",
+      data: updatedOrder,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createOrder,
   getMyOrders,
   getOrderById,
   cancelOrder,
+  getAllOrders,
+  updateOrderStatus,
 };

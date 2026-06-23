@@ -4,12 +4,15 @@ const {
   createOrder,
   getMyOrders,
   getOrderById,
-  cancelOrder
+  cancelOrder,
+  getAllOrders,
+  updateOrderStatus
 } = require("../Controllers/orderController");
 
 const {
   protectedMiddleware,
 } = require("../middleware/protected");
+const { restrictedMiddleware } = require("../middleware/restrictedMiddleware");
 
 const router = express.Router();
 
@@ -25,6 +28,23 @@ router.get(
   "/my-orders",
   protectedMiddleware,
   getMyOrders
+);
+
+
+// GET ALL ORDERS FOR ADMIN
+router.get(
+  "/admin/all",
+  protectedMiddleware,
+  restrictedMiddleware("ADMIN"),
+  getAllOrders
+);
+
+// UPDATE ORDER STATUS FOR ADMIN
+router.put(
+  "/admin/:id/status",
+  protectedMiddleware,
+  restrictedMiddleware("ADMIN"),
+  updateOrderStatus
 );
 
 // GET SINGLE ORDER
